@@ -1,0 +1,172 @@
+<p-drawer
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  position="right"
+  [modal]="true"
+  [dismissible]="true"
+  [blockScroll]="true"
+  [closeOnEscape]="true"
+  [showCloseIcon]="false"
+  [maskStyle]="{ background: 'rgba(31, 43, 51, 0.16)', backdropFilter: 'blur(2px)' }"
+  [style]="{ width: 'min(28rem, 100vw)' }"
+  styleClass="assistant-drawer"
+>
+  @if (field(); as currentField) {
+    <div #assistantPanel class="assistant-panel">
+      <header class="assistant-panel__header">
+        <div class="assistant-panel__header-copy">
+          <p class="assistant-panel__eyebrow">Field assistant</p>
+          <h2 class="assistant-panel__title">{{ currentField.label }}</h2>
+          <p class="assistant-panel__context">{{ currentField.contextLine }}</p>
+        </div>
+
+        <button
+          type="button"
+          pButton
+          text
+          rounded
+          severity="secondary"
+          icon="pi pi-times"
+          class="assistant-panel__close"
+          ariaLabel="Close assistant"
+          (click)="closePanel()"
+        ></button>
+      </header>
+
+      <p-divider></p-divider>
+
+      @if (fieldState(); as state) {
+        <div class="assistant-panel__content">
+          <div class="assistant-panel__main">
+            @if (state.error && state.explanationStatus === 'error') {
+              <div class="assistant-panel__error">
+                <p-message severity="error" [text]="state.error.message"></p-message>
+                <button
+                  type="button"
+                  pButton
+                  label="Retry"
+                  severity="secondary"
+                  (click)="retryExplain.emit()"
+                ></button>
+              </div>
+            } @else if (state.explanationStatus === 'loading') {
+              <div class="assistant-panel__loading">
+                <p-skeleton width="55%" height="1rem"></p-skeleton>
+                <p-skeleton width="100%" height="4rem"></p-skeleton>
+                <p-skeleton width="48%" height="1rem"></p-skeleton>
+                <p-skeleton width="100%" height="4rem"></p-skeleton>
+                <p-skeleton width="42%" height="1rem"></p-skeleton>
+                <p-skeleton width="100%" height="4rem"></p-skeleton>
+              </div>
+            } @else if (state.explanation) {
+              <section class="assistant-panel__sections">
+                <article class="explanation-block">
+                  <h3>What this question means</h3>
+                  <p>{{ state.explanation.whatThisMeans }}</p>
+                </article>
+
+                <article class="explanation-block">
+                  <h3>Why this is being asked</h3>
+                  <p>{{ state.explanation.whyAsked }}</p>
+                </article>
+
+                <article class="explanation-block">
+                  <h3>What to enter</h3>
+                  <p>{{ state.explanation.whatToEnter }}</p>
+                </article>
+
+                <article class="explanation-block">
+                  <h3>Examples</h3>
+                  <ul class="explanation-block__list">
+                    @for (example of state.explanation.examples; track example) {
+                      <li>{{ example }}</li>
+                    }
+                  </ul>
+                </article>
+
+                <article class="explanation-block">
+                  <h3>Common mistakes</h3>
+                  <ul class="explanation-block__list">
+                    @for (mistake of state.explanation.commonMistakes; track mistake) {
+                      <li>{{ mistake }}</li>
+                    }
+                  </ul>
+                </article>
+
+                @if (state.explanation.disclaimer) {
+                  <p-message severity="secondary" [text]="state.explanation.disclaimer"></p-message>
+                }
+              </section>
+            }
+          </div>
+
+          <p-divider></p-divider>
+
+          <section class="assistant-panel__chat">
+            <div class="assistant-panel__chat-header">
+              <div>
+                <h3>Follow-up chat</h3>
+                <p>Ask about this question only.</p>
+              </div>
+            </div>
+
+            <div class="chat-thread">
+              @if (fieldState()?.chatTurns; as chatTurns) {
+                @if (chatTurns.length === 0) {
+                  <p class="chat-thread__empty">
+                    Start with a follow-up question and the assistant will stay focused on {{ currentField.label }}.
+                  </p>
+                }
+                @for (turn of chatTurns; track turn.id) {
+                  <article
+                    class="chat-turn"
+                    [class.chat-turn--assistant]="turn.role === 'assistant'"
+                    [class.chat-turn--pending]="turn.pending"
+                    [class.chat-turn--error]="turn.error"
+                    [attr.aria-busy]="turn.pending ? 'true' : null"
+                  >
+                    <span class="chat-turn__role">{{ turn.role === 'assistant' ? 'Assistant' : 'You' }}</span>
+                    @if (turn.pending) {
+                      <div class="chat-turn__status">
+                        <p-progressspinner
+                          strokeWidth="5"
+                          styleClass="assistant-panel__spinner"
+                          [style]="{ width: '1rem', height: '1rem' }"
+                        ></p-progressspinner>
+                        <p>Writing a response...</p>
+                      </div>
+                    } @else {
+                      <p>{{ turn.content }}</p>
+                    }
+                  </article>
+                }
+              }
+            </div>
+
+            <div class="chat-compose">
+              <textarea
+                pTextarea
+                [autoResize]="true"
+                rows="3"
+                [value]="draftMessage()"
+                placeholder="Ask about this question..."
+                (input)="updateDraft(($any($event.target)).value)"
+                (keydown.enter)="handleComposerEnter($any($event))"
+              ></textarea>
+
+              <button
+                type="button"
+                pButton
+                label="Send"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                [disabled]="state.chatPending || state.explanationStatus !== 'ready'"
+                (click)="submitMessage()"
+              ></button>
+            </div>
+          </section>
+        </div>
+      }
+    </div>
+  }
+</p-drawer>

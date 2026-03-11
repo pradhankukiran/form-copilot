@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm vercel-build",
+  "outputDirectory": "dist/form-copilot",
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/((?!api/|@[^/]+/|.*\\..*).*)",
+      "dest": "/index.html"
+    }
+  ]
+}

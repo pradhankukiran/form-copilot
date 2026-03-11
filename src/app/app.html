@@ -1,0 +1,145 @@
+<div class="page-shell">
+  <main class="workspace">
+    <section class="page-header">
+      <div class="page-header__intro">
+        <p class="page-header__eyebrow">AI-assisted permit intake</p>
+        <h1 class="page-header__title">Permit application draft</h1>
+        <p class="page-header__description">
+          Review each field, fill in the application details, and open the assistant from any card when the wording is
+          unclear.
+        </p>
+      </div>
+
+      <aside class="page-header__tip">
+        <p class="page-header__tip-label">Quick tip</p>
+        <p class="page-header__tip-text">
+          Use <strong>Ask AI</strong> for plain-language help and follow-up questions that stay scoped to the current
+          field.
+        </p>
+      </aside>
+    </section>
+
+    <form class="permit-form" [formGroup]="form" novalidate>
+      @for (section of sections; track section.id) {
+        <section class="form-section">
+          <div class="form-section__header">
+            <div class="form-section__copy">
+              <p class="form-section__eyebrow">{{ section.eyebrow }}</p>
+              <h2 class="form-section__title">{{ section.title }}</h2>
+              <p class="form-section__description">{{ section.description }}</p>
+            </div>
+
+            <p class="form-section__count">{{ sectionFieldCount(section.id) }} fields</p>
+          </div>
+
+          <div class="field-grid">
+            @for (field of fieldsBySection(section.id); track field.id) {
+              <article class="field-card" [class.field-card--active]="activeField()?.id === field.id">
+                <header class="field-card__header">
+                  <div class="field-card__title-block">
+                    <div class="field-card__title-row">
+                      <label class="field-card__label" [attr.for]="field.id">{{ field.label }}</label>
+                      @if (field.required) {
+                        <span class="field-card__required">*</span>
+                      }
+                    </div>
+                    <p class="field-card__question">{{ field.questionText }}</p>
+                  </div>
+
+                  <button
+                    type="button"
+                    pButton
+                    severity="secondary"
+                    outlined
+                    class="field-card__assist-button"
+                    icon="pi pi-sparkles"
+                    label="Ask AI"
+                    [ariaLabel]="'Open AI help for ' + field.label"
+                    (click)="openAssistant(field)"
+                  ></button>
+                </header>
+
+                <div class="field-card__control">
+                  @switch (field.kind) {
+                    @case ('text') {
+                      <input
+                        pInputText
+                        [id]="field.id"
+                        [formControlName]="field.controlName"
+                        [placeholder]="field.placeholder ?? ''"
+                      />
+                    }
+
+                    @case ('select') {
+                      <p-select
+                        [inputId]="field.id"
+                        [formControlName]="field.controlName"
+                        [options]="field.options ?? []"
+                        optionLabel="label"
+                        optionValue="value"
+                        [placeholder]="field.placeholder ?? 'Select an option'"
+                      ></p-select>
+                    }
+
+                    @case ('currency') {
+                      <p-inputnumber
+                        [inputId]="field.id"
+                        [formControlName]="field.controlName"
+                        mode="currency"
+                        currency="USD"
+                        locale="en-US"
+                        [minFractionDigits]="0"
+                        [maxFractionDigits]="0"
+                        [placeholder]="field.placeholder ?? ''"
+                      ></p-inputnumber>
+                    }
+
+                    @case ('date') {
+                      <input
+                        pInputText
+                        type="date"
+                        [id]="field.id"
+                        [formControlName]="field.controlName"
+                      />
+                    }
+
+                    @case ('textarea') {
+                      <textarea
+                        pTextarea
+                        [id]="field.id"
+                        [formControlName]="field.controlName"
+                        [autoResize]="true"
+                        rows="5"
+                        [placeholder]="field.placeholder ?? ''"
+                      ></textarea>
+                    }
+
+                    @case ('boolean') {
+                      <div class="field-card__toggle-row">
+                        <p-toggleswitch [inputId]="field.id" [formControlName]="field.controlName"></p-toggleswitch>
+                        <span class="field-card__toggle-label">{{ field.booleanLabel }}</span>
+                      </div>
+                    }
+                  }
+                </div>
+
+                @if (field.helpText) {
+                  <p class="field-card__hint">{{ field.helpText }}</p>
+                }
+              </article>
+            }
+          </div>
+        </section>
+      }
+    </form>
+  </main>
+
+  <app-field-assistant-panel
+    [visible]="panelVisible()"
+    [field]="activeField()"
+    [fieldState]="activeFieldState()"
+    (visibleChange)="panelVisible.set($event)"
+    (retryExplain)="retryActiveExplanation()"
+    (sendMessage)="submitFollowUp($event)"
+  />
+</div>

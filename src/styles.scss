@@ -1,0 +1,98 @@
+@import 'primeicons/primeicons.css';
+
+:root {
+  color-scheme: light;
+  font-family: 'Source Sans 3', sans-serif;
+  background: #f3f4f6;
+  color: #1f2b33;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f3f4f6;
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+body .p-drawer.assistant-drawer {
+  background: #fdf9f1;
+  border-left: 1px solid #d8d0c3;
+  box-shadow: none;
+}
+
+body .p-drawer.assistant-drawer .p-drawer-header {
+  display: none;
+}
+
+body .p-drawer.assistant-drawer .p-drawer-content {
+  padding: 1rem;
+}
+
+body .field-card__control .p-inputtext,
+body .field-card__control .p-inputnumber-input,
+body .field-card__control .p-select,
+body .chat-compose .p-inputtextarea {
+  border-color: #cbbfae;
+  border-radius: 0.8rem;
+  background: #fffdfa;
+  box-shadow: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+body .field-card__control .p-inputtext,
+body .field-card__control .p-inputnumber-input,
+body .chat-compose .p-inputtextarea {
+  width: 100%;
+  min-height: 3rem;
+  padding-inline: 0.9rem;
+}
+
+body .field-card__control .p-inputtextarea {
+  min-height: 7rem;
+  padding-block: 0.75rem;
+}
+
+body .field-card__control .p-select,
+body .field-card__control .p-select {
+  min-height: 3rem;
+}
+
+body .field-card__control .p-select:not(.p-disabled):hover,
+body .field-card__control .p-inputtext:hover,
+body .field-card__control .p-inputnumber-input:hover,
+body .chat-compose .p-inputtextarea:hover {
+  border-color: #b5a58f;
+}
+
+body .field-card__control .p-select.p-focus,
+body .field-card__control .p-inputtext:focus,
+body .field-card__control .p-inputnumber-input:focus,
+body .chat-compose .p-inputtextarea:focus {
+  border-color: #1f6a67;
+  box-shadow: 0 0 0 3px rgba(31, 106, 103, 0.14);
+}
+
+body .field-card__control .p-inputnumber,
+body .field-card__control .p-inputnumber .p-inputtext {
+  width: 100%;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
