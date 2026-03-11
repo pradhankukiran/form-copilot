@@ -1,6 +1,6 @@
 # Form Copilot
 
-Phase 1 prototype for the AI Online Form Field Assistant described in the project brief. The app uses Angular 21, PrimeNG 21, Vercel Functions, and Cerebras.
+Phase 1 prototype for the AI Online Form Field Assistant described in the project brief. The app uses Angular 21, PrimeNG 21, Vercel Functions, and Groq.
 
 ## Features
 
@@ -9,7 +9,6 @@ Phase 1 prototype for the AI Online Form Field Assistant described in the projec
 - Right-side assistant drawer modeled after the PDF mockup
 - Structured explanation sections
 - Field-scoped follow-up chat
-- Assistant-only language switching
 - Vercel-ready `/api/*` backend surface
 
 ## Local development
@@ -20,7 +19,7 @@ Install dependencies:
 pnpm install
 ```
 
-Copy the example env file and fill in your Cerebras credentials:
+Copy the example env file and fill in your Groq credentials:
 
 ```bash
 cp .env.example .env.local
@@ -43,7 +42,7 @@ pnpm dev:api
 pnpm build
 ```
 
-The production SPA output is written to `dist/form-copilot`.
+The Angular application build is written to `dist/form-copilot`, with deployable browser assets in `dist/form-copilot/browser`.
 
 ## Deploy to Vercel
 
@@ -52,16 +51,14 @@ The repo is configured for:
 - frontend: static Angular SPA
 - backend: Vercel Node Functions under `api/`
 - SPA fallback: handled through `vercel.json` rewrites
-- Cerebras integration: official `@cerebras/cerebras_cloud_sdk`
+- Groq integration: official `groq-sdk`
 
 Set these environment variables in Vercel:
 
-- `CEREBRAS_API_KEY`
-- `CEREBRAS_BASE_URL`
-- `CEREBRAS_MODEL`
+- `GROQ_API_KEY`
+- `GROQ_MODEL`
 
 Current default model in the repo is `gpt-oss-120b`.
-Use the base API host for `CEREBRAS_BASE_URL`, for example `https://api.cerebras.ai`.
 
 ## Tests
 
