@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-import { createJsonCompletion } from '../_lib/anthropic';
-import { ApiError, handleApiError, parseJsonBody, sendApiError, sendJson } from '../_lib/http';
-import { buildExplainPrompt } from '../_lib/prompts';
-import { explainRequestSchema, explanationSchema } from '../_lib/schemas';
+import { createJsonCompletion } from '../_lib/anthropic.js';
+import { ApiError, handleApiError, parseJsonBody, sendApiError, sendJson } from '../_lib/http.js';
+import { buildExplainPrompt } from '../_lib/prompts.js';
+import { explainRequestSchema, explanationSchema } from '../_lib/schemas.js';
 
 const jsonSchemaInstruction = [
   'Respond with a JSON object containing exactly these keys:',

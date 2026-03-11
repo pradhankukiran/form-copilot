@@ -2,7 +2,7 @@ import type {
   AssistantChatRequest,
   AssistantExplainRequest
 } from '../../src/shared/assistant-contract';
-import { getLanguageLabel } from './language';
+import { getLanguageLabel } from './language.js';
 
 function renderFieldContext(request: AssistantExplainRequest): string {
   return [

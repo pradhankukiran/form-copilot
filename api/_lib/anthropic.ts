@@ -1,7 +1,7 @@
 import Groq from 'groq-sdk';
 
 import type { AssistantChatMessage, AssistantResponseMeta, SupportedLanguage } from '../../src/shared/assistant-contract';
-import { ApiError } from './http';
+import { ApiError } from './http.js';
 
 type CompletionMessage =
   | { role: 'system'; content: string }

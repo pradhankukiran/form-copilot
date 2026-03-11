@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-import { createCompletion, normalizeHistory } from '../_lib/anthropic';
-import { ApiError, handleApiError, parseJsonBody, sendApiError, sendJson } from '../_lib/http';
-import { buildChatSystemPrompt } from '../_lib/prompts';
-import { chatRequestSchema } from '../_lib/schemas';
+import { createCompletion, normalizeHistory } from '../_lib/anthropic.js';
+import { ApiError, handleApiError, parseJsonBody, sendApiError, sendJson } from '../_lib/http.js';
+import { buildChatSystemPrompt } from '../_lib/prompts.js';
+import { chatRequestSchema } from '../_lib/schemas.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse): Promise<void> {
   if (req.method !== 'POST') {

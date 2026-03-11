@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-import { getResponseMeta } from './_lib/anthropic';
-import { sendApiError, sendJson } from './_lib/http';
+import { getResponseMeta } from './_lib/anthropic.js';
+import { sendApiError, sendJson } from './_lib/http.js';
 
 export default function handler(req: VercelRequest, res: VercelResponse): void {
   if (req.method !== 'GET') {
